@@ -136,7 +136,11 @@ function Hero() {
         />
       </div>
       <div className="absolute inset-0 fog-overlay-top z-10" />
+      <div className="absolute inset-0 haze-pass z-10 pointer-events-none" />
+      <div className="absolute inset-0 ember-glow-corner z-10 pointer-events-none" />
       <div className="absolute inset-0 vignette z-10" />
+      {/* Section seam into Manifesto */}
+      <div className="absolute bottom-0 inset-x-0 h-40 seam-bottom z-10 pointer-events-none" />
 
       {/* Frame markers */}
       <div className="absolute top-32 left-6 md:left-12 z-20 label-mono animate-reveal-fade delay-700">
