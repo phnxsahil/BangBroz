@@ -32,7 +32,10 @@
   --color-accent: var(--dawn);
   --color-accent-foreground: var(--background);
   --color-ember: var(--ember);
+  --color-ember-glow: var(--ember-glow);
   --color-dawn: var(--dawn);
+  --color-haze: var(--haze);
+  --color-surface-warm: var(--surface-warm);
   --color-destructive: oklch(0.55 0.22 27);
   --color-destructive-foreground: var(--foreground);
   --color-border: var(--border);
