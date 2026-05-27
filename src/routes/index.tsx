@@ -326,7 +326,11 @@ const journals: Journal[] = [
 
 function Journals() {
   return (
-    <section id="journals" className="relative py-32 md:py-48 px-6 md:px-12 bg-surface">
+    <section id="journals" className="relative py-32 md:py-48 px-6 md:px-12 bg-surface overflow-hidden">
+      <div className="absolute top-0 inset-x-0 h-32 seam-top pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-32 seam-bottom pointer-events-none" />
+      <div className="absolute top-1/3 -left-40 w-[50vw] h-[50vw] rounded-full pointer-events-none"
+           style={{ background: "radial-gradient(circle, rgba(107,122,143,0.08) 0%, transparent 60%)" }} />
       <div className="mx-auto max-w-[1500px]">
         <div className="grid grid-cols-12 gap-6 mb-20 md:mb-28">
           <div className="col-span-12 md:col-span-3 label-mono">02 / Field Journals</div>
