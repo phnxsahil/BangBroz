@@ -7,6 +7,7 @@ import destSpiti from "@/assets/dest-spiti.jpg";
 import destZanskar from "@/assets/dest-zanskar.jpg";
 import destLadakh from "@/assets/dest-ladakh.jpg";
 import destParvati from "@/assets/dest-parvati.jpg";
+import { StackedChapters } from "@/components/StackedChapters";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -79,6 +80,7 @@ function Home() {
       <Manifesto />
       <Chapter />
       <Journals />
+      <StackedChapters />
       <Quote />
       <Field />
       <Footer />
