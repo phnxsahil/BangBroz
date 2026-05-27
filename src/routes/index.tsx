@@ -183,11 +183,13 @@ function Hero() {
 function Manifesto() {
   const { ref, visible } = useReveal<HTMLDivElement>();
   return (
-    <section id="manifesto" className="relative py-32 md:py-48 px-6 md:px-12">
-      <div ref={ref} className="mx-auto max-w-[1500px] grid grid-cols-12 gap-y-12 gap-x-6">
-        <div className="col-span-12 md:col-span-3 label-mono">
-          01 / Manifesto
-        </div>
+    <section id="manifesto" className="relative py-32 md:py-48 px-6 md:px-12 overflow-hidden">
+      {/* Atmospheric warmth — distant guesthouse window */}
+      <div className="absolute -top-32 -right-40 w-[60vw] h-[60vw] rounded-full pointer-events-none opacity-60"
+           style={{ background: "radial-gradient(circle, rgba(232,106,60,0.08) 0%, transparent 55%)" }} />
+      <div className="absolute -bottom-40 -left-32 w-[55vw] h-[55vw] rounded-full pointer-events-none opacity-50"
+           style={{ background: "radial-gradient(circle, rgba(107,122,143,0.10) 0%, transparent 60%)" }} />
+      <div ref={ref} className="relative mx-auto max-w-[1500px] grid grid-cols-12 gap-y-12 gap-x-6">
         <div className="col-span-12 md:col-span-9">
           <p
             className={`font-display text-[7vw] md:text-[3.6vw] leading-[1.08] tracking-[-0.02em] text-foreground transition-all duration-1500 ease-out ${
