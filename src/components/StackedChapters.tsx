@@ -208,10 +208,12 @@ function Card({ card, parallaxY }: { card: Hidden; parallaxY: number }) {
         />
       </div>
 
-      {/* Atmospheric overlays */}
-      <div className="absolute inset-0 bg-background/40" />
+      {/* Atmospheric overlays — cold haze + warm ember from the valley floor */}
+      <div className="absolute inset-0 bg-background/45" />
+      <div className="absolute inset-0 haze-pass pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/70" />
       <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/30" />
+      <div className="absolute inset-0 ember-glow-corner pointer-events-none" />
       <div className="absolute inset-0 vignette" />
 
       {/* Content frame */}
