@@ -136,7 +136,11 @@ function Hero() {
         />
       </div>
       <div className="absolute inset-0 fog-overlay-top z-10" />
+      <div className="absolute inset-0 haze-pass z-10 pointer-events-none" />
+      <div className="absolute inset-0 ember-glow-corner z-10 pointer-events-none" />
       <div className="absolute inset-0 vignette z-10" />
+      {/* Section seam into Manifesto */}
+      <div className="absolute bottom-0 inset-x-0 h-40 seam-bottom z-10 pointer-events-none" />
 
       {/* Frame markers */}
       <div className="absolute top-32 left-6 md:left-12 z-20 label-mono animate-reveal-fade delay-700">
@@ -179,8 +183,13 @@ function Hero() {
 function Manifesto() {
   const { ref, visible } = useReveal<HTMLDivElement>();
   return (
-    <section id="manifesto" className="relative py-32 md:py-48 px-6 md:px-12">
-      <div ref={ref} className="mx-auto max-w-[1500px] grid grid-cols-12 gap-y-12 gap-x-6">
+    <section id="manifesto" className="relative py-32 md:py-48 px-6 md:px-12 overflow-hidden">
+      {/* Atmospheric warmth — distant guesthouse window */}
+      <div className="absolute -top-32 -right-40 w-[60vw] h-[60vw] rounded-full pointer-events-none opacity-60"
+           style={{ background: "radial-gradient(circle, rgba(232,106,60,0.08) 0%, transparent 55%)" }} />
+      <div className="absolute -bottom-40 -left-32 w-[55vw] h-[55vw] rounded-full pointer-events-none opacity-50"
+           style={{ background: "radial-gradient(circle, rgba(107,122,143,0.10) 0%, transparent 60%)" }} />
+      <div ref={ref} className="relative mx-auto max-w-[1500px] grid grid-cols-12 gap-y-12 gap-x-6">
         <div className="col-span-12 md:col-span-3 label-mono">
           01 / Manifesto
         </div>
@@ -317,7 +326,11 @@ const journals: Journal[] = [
 
 function Journals() {
   return (
-    <section id="journals" className="relative py-32 md:py-48 px-6 md:px-12 bg-surface">
+    <section id="journals" className="relative py-32 md:py-48 px-6 md:px-12 bg-surface overflow-hidden">
+      <div className="absolute top-0 inset-x-0 h-32 seam-top pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-32 seam-bottom pointer-events-none" />
+      <div className="absolute top-1/3 -left-40 w-[50vw] h-[50vw] rounded-full pointer-events-none"
+           style={{ background: "radial-gradient(circle, rgba(107,122,143,0.08) 0%, transparent 60%)" }} />
       <div className="mx-auto max-w-[1500px]">
         <div className="grid grid-cols-12 gap-6 mb-20 md:mb-28">
           <div className="col-span-12 md:col-span-3 label-mono">02 / Field Journals</div>
@@ -401,9 +414,13 @@ function Quote() {
   return (
     <section
       ref={ref}
-      className="relative py-40 md:py-64 px-6 md:px-12 overflow-hidden"
+      className="relative py-40 md:py-64 px-6 md:px-12 overflow-hidden bg-surface-warm paper-grain"
     >
-      <div className="mx-auto max-w-[1200px] text-center">
+      {/* Warm interior glow — chai light from the kerosene lamp */}
+      <div className="absolute inset-0 ember-glow pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-40 seam-top pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-40 seam-bottom pointer-events-none" />
+      <div className="relative mx-auto max-w-[1200px] text-center">
         <div className="label-mono mb-12 text-secondary">— A Sherpa, name unrecorded</div>
         <blockquote
           className={`font-display italic text-3xl md:text-6xl leading-[1.15] tracking-tight text-foreground transition-all duration-[1800ms] ease-out ${
@@ -438,8 +455,11 @@ function Field() {
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="absolute inset-0 bg-background/40 z-10" />
+        <div className="absolute inset-0 bg-background/50 z-10" />
         <div className="absolute inset-0 fog-overlay z-10" />
+        <div className="absolute inset-0 ember-glow z-10 pointer-events-none" />
+        <div className="absolute inset-0 vignette z-10" />
+        <div className="absolute top-0 inset-x-0 h-32 seam-top z-10 pointer-events-none" />
 
         <div
           ref={ref}
