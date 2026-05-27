@@ -414,14 +414,14 @@ function Quote() {
   return (
     <section
       ref={ref}
-      className="relative py-40 md:py-64 px-6 md:px-12 overflow-hidden"
+      className="relative py-40 md:py-64 px-6 md:px-12 overflow-hidden bg-surface-warm paper-grain"
     >
-      <div className="mx-auto max-w-[1200px] text-center">
+      {/* Warm interior glow — chai light from the kerosene lamp */}
+      <div className="absolute inset-0 ember-glow pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-40 seam-top pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-40 seam-bottom pointer-events-none" />
+      <div className="relative mx-auto max-w-[1200px] text-center">
         <div className="label-mono mb-12 text-secondary">— A Sherpa, name unrecorded</div>
-        <blockquote
-          className={`font-display italic text-3xl md:text-6xl leading-[1.15] tracking-tight text-foreground transition-all duration-[1800ms] ease-out ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
         >
           "You don't <span className="not-italic text-dawn">climb</span> a mountain.
           You ask it for <span className="not-italic text-ember">passage</span>,
