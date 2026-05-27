@@ -455,8 +455,11 @@ function Field() {
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="absolute inset-0 bg-background/40 z-10" />
+        <div className="absolute inset-0 bg-background/50 z-10" />
         <div className="absolute inset-0 fog-overlay z-10" />
+        <div className="absolute inset-0 ember-glow z-10 pointer-events-none" />
+        <div className="absolute inset-0 vignette z-10" />
+        <div className="absolute top-0 inset-x-0 h-32 seam-top z-10 pointer-events-none" />
 
         <div
           ref={ref}
