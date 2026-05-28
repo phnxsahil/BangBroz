@@ -111,7 +111,7 @@ export function StackedChapters() {
         >
           <div className="mx-auto max-w-[1500px] flex items-end justify-between gap-8">
             <div>
-              <div className="label-mono mb-4 text-ember">05 / Hidden Chapters</div>
+              <div className="label-mono mb-4 text-ember">04 / Hidden Chapters</div>
               <h2 className="font-display text-display-lg leading-[0.96] tracking-tight max-w-2xl">
                 Four places the <em className="italic text-ember">map</em> tries to keep quiet.
               </h2>

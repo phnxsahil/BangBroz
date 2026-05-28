@@ -62,7 +62,7 @@ export function QuoteMoments() {
   return (
     <section className="relative bg-background">
       <div className="label-mono px-5 md:px-10 pt-20 md:pt-32 pb-8 mx-auto max-w-[1500px] text-ember">
-        04 / What they said after
+        05 / What they said after
       </div>
       <div>
         {moments.map((m, i) => (
