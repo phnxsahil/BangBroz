@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight, MessageCircle, MapPin } from "lucide-react";
 import heroMountains from "@/assets/hero-mountains.jpg";
 
 const WHATSAPP =
   "https://wa.me/918865848737?text=Hi%20Bag%20N%20Bros%2C%20tell%20me%20about%20Munsiyari.";
+
+// Free, CDN-hosted cinematic mountain loop. Poster image is the fallback
+// if the network is slow or the video fails to load.
+const HERO_VIDEO =
+  "https://videos.pexels.com/video-files/3214448/3214448-uhd_2560_1440_25fps.mp4";
 
 function useParallax() {
   const [y, setY] = useState(0);
@@ -26,20 +31,45 @@ function useParallax() {
 
 export function Hero() {
   const y = useParallax();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoReady, setVideoReady] = useState(false);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+    v.play().catch(() => {});
+  }, []);
+
   return (
     <section
       id="top"
       className="relative min-h-[100svh] w-full overflow-hidden grain"
     >
-      {/* Parallax image */}
+      {/* Parallax background: image as resilient poster, video layered on top */}
       <div
-        className="absolute inset-0 will-change-transform animate-ken-burns"
-        style={{ transform: `translate3d(0, ${y * 0.35}px, 0) scale(1.1)` }}
+        className="absolute inset-0 will-change-transform"
+        style={{ transform: `translate3d(0, ${y * 0.35}px, 0) scale(1.08)` }}
       >
         <img
           src={heroMountains}
           alt="Snow-dusted Himalayan ridge at dawn"
-          className="h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover animate-ken-burns"
+        />
+        <video
+          ref={videoRef}
+          src={HERO_VIDEO}
+          poster={heroMountains}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onCanPlay={() => setVideoReady(true)}
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1800ms] ${
+            videoReady ? "opacity-100" : "opacity-0"
+          }`}
         />
       </div>
 
@@ -49,6 +79,7 @@ export function Hero() {
       <div className="absolute inset-0 ember-glow-corner z-10 pointer-events-none" />
       <div className="absolute inset-0 vignette z-10" />
       <div className="absolute bottom-0 inset-x-0 h-40 seam-bottom z-10 pointer-events-none" />
+
 
       {/* Top meta strip */}
       <div className="absolute top-20 md:top-28 inset-x-0 z-20 px-5 md:px-10 flex justify-between items-start label-mono animate-reveal-fade delay-700">
