@@ -145,11 +145,14 @@ function ReelTile({ reel, index }: { reel: Reel; index: number }) {
     >
       <div className="relative h-full w-full overflow-hidden rounded-sm grain bg-surface">
         <img
+          ref={imgRef}
           src={reel.poster}
           alt={reel.title}
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[2000ms] group-hover:scale-110"
+          style={{ transform: "scale(1.15)" }}
+          className="absolute inset-0 h-full w-full object-cover will-change-transform"
         />
+
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-background/40" />
         <div className="absolute inset-0 vignette" />
 
