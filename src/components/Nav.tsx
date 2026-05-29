@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
-import logo from "@/assets/logo-bnb-dark.png";
+import logo from "@/assets/logo-bnb-light.png";
 
 const NAV_LINKS = [
-  { label: "Expeditions", href: "#munsiyari" },
-  { label: "Destinations", href: "#hidden" },
-  { label: "Journal", href: "#journals" },
+  { label: "Expedition", href: "#munsiyari" },
   { label: "Reels", href: "#reels" },
   { label: "Contact", href: "#contact" },
 ];
+
 
 const WHATSAPP =
   "https://wa.me/918865848737?text=Hi%20Bag%20N%20Bros%2C%20I%27d%20like%20to%20know%20more%20about%20your%20next%20expedition.";
@@ -59,9 +58,10 @@ export function Nav() {
             <img
               src={logo}
               alt="Bag N' Bros"
-              className="h-7 md:h-9 w-auto select-none"
+              className="h-9 md:h-11 w-auto select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
               draggable={false}
             />
+
           </a>
 
           {/* Desktop nav */}

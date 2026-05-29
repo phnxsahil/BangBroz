@@ -88,18 +88,20 @@ export function ReelsRail() {
 
 function ReelTile({ reel, index }: { reel: Reel; index: number }) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     el.style.opacity = "0";
-    el.style.transform = "translateY(30px)";
+    el.style.transform = "translateY(40px) scale(0.94)";
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            (e.target as HTMLElement).style.transition = `opacity 900ms ${index * 80}ms ease, transform 900ms ${index * 80}ms cubic-bezier(0.16,1,0.3,1)`;
+            (e.target as HTMLElement).style.transition = `opacity 1100ms ${index * 90}ms ease, transform 1200ms ${index * 90}ms cubic-bezier(0.16,1,0.3,1)`;
             (e.target as HTMLElement).style.opacity = "1";
-            (e.target as HTMLElement).style.transform = "translateY(0)";
+            (e.target as HTMLElement).style.transform = "translateY(0) scale(1)";
             io.unobserve(e.target);
           }
         });
@@ -110,6 +112,32 @@ function ReelTile({ reel, index }: { reel: Reel; index: number }) {
     return () => io.disconnect();
   }, [index]);
 
+  // Scroll-driven parallax inside each tile
+  useEffect(() => {
+    const tile = ref.current;
+    const img = imgRef.current;
+    if (!tile || !img) return;
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        const rect = tile.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const dist = (center - window.innerHeight / 2) / window.innerHeight;
+        const shift = Math.max(-30, Math.min(30, dist * -40));
+        img.style.transform = `translate3d(0, ${shift}px, 0) scale(1.15)`;
+        raf = 0;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+
   return (
     <div
       ref={ref}
@@ -117,11 +145,14 @@ function ReelTile({ reel, index }: { reel: Reel; index: number }) {
     >
       <div className="relative h-full w-full overflow-hidden rounded-sm grain bg-surface">
         <img
+          ref={imgRef}
           src={reel.poster}
           alt={reel.title}
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[2000ms] group-hover:scale-110"
+          style={{ transform: "scale(1.15)" }}
+          className="absolute inset-0 h-full w-full object-cover will-change-transform"
         />
+
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-background/40" />
         <div className="absolute inset-0 vignette" />
 
