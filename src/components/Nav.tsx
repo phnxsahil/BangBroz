@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
-import logo from "@/assets/logo-bnb-light.png";
+import { Logo } from "@/components/Logo";
+import { WHATSAPP } from "@/lib/images";
 
 const NAV_LINKS = [
-  { label: "Expedition", href: "#munsiyari" },
+  { label: "Who we are", href: "#about" },
+  { label: "What we do", href: "#what-we-do" },
+  { label: "Munsiyari", href: "#munsiyari" },
   { label: "Reels", href: "#reels" },
-  { label: "Contact", href: "#contact" },
 ];
-
-
-const WHATSAPP =
-  "https://wa.me/918865848737?text=Hi%20Bag%20N%20Bros%2C%20I%27d%20like%20to%20know%20more%20about%20your%20next%20expedition.";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 16);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -25,104 +23,87 @@ export function Nav() {
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-50 safe-top transition-all duration-500 ${
+        className={`fixed top-0 inset-x-0 z-50 safe-top transition-all duration-300 ${
           scrolled
-            ? "backdrop-blur-xl bg-background/60 border-b border-foreground/5"
+            ? "backdrop-blur-xl bg-background/85 border-b border-foreground/5"
             : "bg-transparent"
         }`}
       >
-        <div className="mx-auto max-w-[1500px] px-5 md:px-10 h-16 md:h-20 flex items-center justify-between">
-          {/* Mobile: hamburger left */}
-          <button
-            onClick={() => setOpen(true)}
-            aria-label="Open menu"
-            className="md:hidden h-11 w-11 -ml-2 flex items-center justify-center text-foreground"
-          >
-            <Menu size={22} strokeWidth={1.5} />
-          </button>
-
-          {/* Logo — centered on mobile, left on desktop */}
-          <a
-            href="#top"
-            className="md:order-none order-2 md:mx-0 mx-auto flex items-center"
-            aria-label="Bag N' Bros — home"
-          >
-            <img
-              src={logo}
-              alt="Bag N' Bros"
-              className="h-9 md:h-11 w-auto select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
-              draggable={false}
-            />
-
+        <div className="mx-auto max-w-[1400px] px-5 md:px-10 h-16 md:h-20 flex items-center justify-between">
+          <a href="#top" aria-label="Bag N' Bros — home" className="flex items-center">
+            <Logo />
           </a>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-9 label-mono">
+          <nav className="hidden md:flex items-center gap-9 text-sm">
             {NAV_LINKS.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
-                className="text-foreground/70 hover:text-foreground transition-colors duration-300"
+                className="text-foreground/75 hover:text-foreground transition-colors"
               >
                 {l.label}
               </a>
             ))}
           </nav>
 
-          {/* WhatsApp / Book — right */}
-          <div className="flex items-center gap-2 md:gap-3 md:order-none order-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <a
               href={WHATSAPP}
               target="_blank"
               rel="noreferrer"
-              aria-label="WhatsApp us"
-              className="md:hidden h-11 w-11 -mr-2 flex items-center justify-center text-ember"
+              className="hidden md:inline-flex btn-primary"
             >
-              <MessageCircle size={20} strokeWidth={1.5} />
+              Plan my trip
             </a>
             <a
               href={WHATSAPP}
               target="_blank"
               rel="noreferrer"
-              className="hidden md:inline-flex btn-ember"
+              aria-label="WhatsApp"
+              className="md:hidden h-11 w-11 -mr-1 flex items-center justify-center text-foreground"
             >
-              Book Expedition
+              <MessageCircle size={20} strokeWidth={1.6} />
             </a>
+            <button
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
+              className="md:hidden h-11 w-11 -mr-2 flex items-center justify-center text-foreground"
+            >
+              <Menu size={22} strokeWidth={1.5} />
+            </button>
           </div>
         </div>
       </header>
 
       {/* Mobile drawer */}
       <div
-        className={`fixed inset-0 z-[70] md:hidden transition-opacity duration-500 ${
+        className={`fixed inset-0 z-[70] md:hidden transition-opacity duration-300 ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden={!open}
       >
         <div
-          className="absolute inset-0 bg-background/95 backdrop-blur-2xl"
+          className="absolute inset-0 bg-background/97 backdrop-blur-2xl"
           onClick={() => setOpen(false)}
         />
         <div className="relative h-full flex flex-col safe-top px-6">
           <div className="h-16 flex items-center justify-between">
-            <img src={logo} alt="Bag N' Bros" className="h-7 w-auto" />
+            <Logo />
             <button
               onClick={() => setOpen(false)}
-              aria-label="Close menu"
+              aria-label="Close"
               className="h-11 w-11 -mr-2 flex items-center justify-center text-foreground"
             >
               <X size={22} strokeWidth={1.5} />
             </button>
           </div>
-          <nav className="flex-1 flex flex-col justify-center -mt-16 gap-2">
+          <nav className="flex-1 flex flex-col justify-center -mt-16 gap-1">
             {NAV_LINKS.map((l, i) => (
               <a
                 key={l.href}
@@ -131,15 +112,15 @@ export function Nav() {
                 className="font-display text-5xl py-3 text-foreground hover:text-ember transition-colors"
                 style={{
                   opacity: open ? 1 : 0,
-                  transform: open ? "translateY(0)" : "translateY(20px)",
-                  transition: `opacity 600ms ${100 + i * 60}ms ease, transform 600ms ${100 + i * 60}ms cubic-bezier(0.16,1,0.3,1)`,
+                  transform: open ? "translateY(0)" : "translateY(12px)",
+                  transition: `opacity 400ms ${80 + i * 50}ms ease, transform 500ms ${80 + i * 50}ms cubic-bezier(0.22,1,0.36,1)`,
                 }}
               >
                 {l.label}
               </a>
             ))}
           </nav>
-          <div className="pb-10 space-y-4">
+          <div className="pb-10 space-y-3">
             <a
               href={WHATSAPP}
               target="_blank"
@@ -147,9 +128,12 @@ export function Nav() {
               className="btn-ember w-full"
             >
               <MessageCircle size={16} strokeWidth={1.8} />
-              WhatsApp Us
+              WhatsApp us
             </a>
-            <div className="label-mono text-center text-foreground/40">
+            <a href="#munsiyari" onClick={() => setOpen(false)} className="btn-ghost w-full">
+              View next expedition
+            </a>
+            <div className="label-mono text-center pt-2">
               +91 88658 48737 · @bag.n.bros
             </div>
           </div>
