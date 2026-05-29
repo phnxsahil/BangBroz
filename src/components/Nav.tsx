@@ -58,9 +58,10 @@ export function Nav() {
             <img
               src={logo}
               alt="Bag N' Bros"
-              className="h-7 md:h-9 w-auto select-none"
+              className="h-9 md:h-11 w-auto select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
               draggable={false}
             />
+
           </a>
 
           {/* Desktop nav */}
