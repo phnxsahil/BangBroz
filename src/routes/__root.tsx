@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "BagnBros" },
+      { name: "description", content: "Himalayan Echoes is a cinematic website for an offbeat Himalayan travel brand, offering an immersive digital expedition journal." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "BagnBros" },
+      { property: "og:description", content: "Himalayan Echoes is a cinematic website for an offbeat Himalayan travel brand, offering an immersive digital expedition journal." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "BagnBros" },
+      { name: "twitter:description", content: "Himalayan Echoes is a cinematic website for an offbeat Himalayan travel brand, offering an immersive digital expedition journal." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a4d4d019-5c4a-4778-b12a-137aae8a4e96/id-preview-6d7cd19c--5b650c39-d0d5-4c69-8b7d-ebd0a5866652.lovable.app-1780510410473.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a4d4d019-5c4a-4778-b12a-137aae8a4e96/id-preview-6d7cd19c--5b650c39-d0d5-4c69-8b7d-ebd0a5866652.lovable.app-1780510410473.png" },
     ],
     links: [
       {
