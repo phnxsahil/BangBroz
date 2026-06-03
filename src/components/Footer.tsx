@@ -46,14 +46,14 @@ export function Footer() {
             <div className="label-mono mb-4">Reach us</div>
             <div className="space-y-3 text-sm">
               <a href="https://instagram.com/bag.n.bros" target="_blank" rel="noreferrer" className="flex items-center gap-3 group hover:text-ember transition-colors">
-                <Instagram size={15} strokeWidth={1.6} /> @bag.n.bros
+                <Instagram size={15} strokeWidth={1.6} /><span>@bag.n.bros</span>
                 <ArrowUpRight size={12} strokeWidth={1.6} className="opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
               </a>
               <a href={WHATSAPP} target="_blank" rel="noreferrer" className="flex items-center gap-3 hover:text-ember transition-colors">
-                <MessageCircle size={15} strokeWidth={1.6} /> +91 88658 48737
+                <MessageCircle size={15} strokeWidth={1.6} /><span>+91 88658 48737</span>
               </a>
               <a href="mailto:hello@bagnbros.in" className="flex items-center gap-3 hover:text-ember transition-colors">
-                <Mail size={15} strokeWidth={1.6} /> hello@bagnbros.in
+                <Mail size={15} strokeWidth={1.6} /><span>hello@bagnbros.in</span>
               </a>
             </div>
           </div>
