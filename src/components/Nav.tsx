@@ -133,9 +133,14 @@ export function Nav() {
             <a href="#munsiyari" onClick={() => setOpen(false)} className="btn-ghost w-full">
               View next expedition
             </a>
-            <div className="label-mono text-center pt-2">
-              +91 88658 48737 · @bag.n.bros
-            </div>
+            <a
+              href="https://instagram.com/bag.n.bros"
+              target="_blank"
+              rel="noreferrer"
+              className="label-mono flex items-center justify-center gap-2 pt-3 hover:text-ember transition-colors"
+            >
+              @bag.n.bros · +91 88658 48737
+            </a>
           </div>
         </div>
       </div>
