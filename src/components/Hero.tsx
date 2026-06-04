@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion, AnimatePresence } from "framer-motion";
 import { ArrowRight, MessageCircle, Instagram } from "lucide-react";
 import { IMG, WHATSAPP, INSTAGRAM, INSTAGRAM_HANDLE } from "@/lib/images";
 
 const HERO_VIDEO =
   "https://videos.pexels.com/video-files/3214448/3214448-uhd_2560_1440_25fps.mp4";
 
+const heroImages = [
+  IMG.heroPeak,
+  IMG.heroValley,
+  IMG.ridge,
+];
+
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const [videoReady, setVideoReady] = useState(false);
+  const [imgIndex, setImgIndex] = useState(0);
   const reduce = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
@@ -26,22 +33,38 @@ export function Hero() {
     v.play().catch(() => {});
   }, [reduce]);
 
+  useEffect(() => {
+    if (reduce) return;
+    const timer = setInterval(() => {
+      setImgIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [reduce]);
+
   return (
     <section
       ref={sectionRef}
       id="top"
-      className="relative min-h-[100svh] w-full overflow-hidden bg-background"
+      className="hero-section relative w-full overflow-x-hidden bg-background z-[1]"
     >
-      {/* Background media */}
+      {/* Background media with crossfade */}
       <motion.div
         style={{ y: mediaY, scale: mediaScale }}
-        className="absolute inset-0 will-change-transform"
+        className="hero-image absolute inset-0 will-change-transform"
       >
-        <img
-          src={IMG.heroPeak}
-          alt="Himalayan ridge at dawn"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={imgIndex}
+            src={heroImages[imgIndex]}
+            alt="Himalayan landscape"
+            className="absolute inset-0 h-full w-full object-cover"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+          />
+        </AnimatePresence>
+
         <video
           ref={videoRef}
           src={HERO_VIDEO}
@@ -58,8 +81,15 @@ export function Hero() {
         />
       </motion.div>
 
-      {/* Warm wash — cream from bottom, soft scrim top */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/15 to-black/15 pointer-events-none" />
+      {/* Directional gradient scrim — darkens left side for text readability */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(108deg, rgba(8,5,2,0.52) 0%, rgba(8,5,2,0.28) 42%, rgba(8,5,2,0.04) 68%, transparent 100%)",
+          zIndex: 1,
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-black/10 pointer-events-none" />
       <motion.div
         style={{ opacity: overlayOpacity }}
         className="absolute inset-0 bg-background pointer-events-none"
@@ -70,7 +100,7 @@ export function Hero() {
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className="absolute top-20 md:top-28 inset-x-0 z-10 px-5 md:px-10 flex justify-between label-mono"
+        className="absolute top-16 md:top-24 inset-x-0 z-10 px-5 md:px-10 flex justify-between label-mono"
       >
         <span className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-ember animate-pulse" />
@@ -88,75 +118,71 @@ export function Hero() {
       </motion.div>
 
       {/* Content */}
-      <div className="relative z-10 min-h-[100svh] flex flex-col justify-end pb-24 md:pb-32 px-5 md:px-10 mx-auto max-w-[1400px]">
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={{
-            hidden: {},
-            show: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
-          }}
-          className="grid grid-cols-12 gap-6 items-end"
+      <div className="hero-content relative z-10">
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="hero-heading font-display text-display-xl"
+          style={{ color: "#FFFFFF" }}
         >
-          <div className="col-span-12 md:col-span-10">
-            <motion.h1
-              variants={{
-                hidden: { opacity: 0, y: 24 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
-              }}
-              className="font-display text-display-xl text-foreground max-w-[18ch]"
-            >
-              Offbeat Himalayan
-              <br />
-              expeditions, <span className="italic font-normal text-ember">crafted slowly.</span>
-            </motion.h1>
+          Offbeat Himalayan
+          <br />
+          expeditions, <span className="italic-accent italic font-normal" style={{ color: "#C8682A" }}>crafted slowly.</span>
+        </motion.h1>
 
-            <motion.p
-              variants={{
-                hidden: { opacity: 0, y: 16 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-              }}
-              className="mt-6 md:mt-9 text-body-lg max-w-xl text-foreground/75"
-            >
-              Bag n Broz is a small travel studio for people who'd rather come back
-              with a story than a checklist. Hidden valleys, real homestays, and a
-              captain who knows the long way.
-            </motion.p>
+        <div className="hero-main-group">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="hero-body"
+          >
+            Bag n Broz is a small travel studio for people who'd rather come back
+            with a story than a checklist. Hidden valleys, real homestays, and a
+            captain who knows the long way.
+          </motion.p>
 
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, y: 16 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-              }}
-              className="mt-9 md:mt-11 flex flex-col sm:flex-row gap-3"
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="hero-btn-row"
+          >
+            <a
+              href="#munsiyari"
+              className="inline-flex items-center justify-center font-sans font-semibold transition-all duration-200 hover:opacity-90"
+              style={{ minHeight: 56, padding: "0 36px", fontSize: 17, fontWeight: 600, borderRadius: 28, background: "#1A1208", color: "#fff" }}
             >
-              <a href="#munsiyari" className="btn-primary">
-                See the next trip
-                <ArrowRight size={16} strokeWidth={2} />
-              </a>
-              <a href={WHATSAPP} target="_blank" rel="noreferrer" className="btn-ghost">
-                <MessageCircle size={16} strokeWidth={1.8} />
-                Talk on WhatsApp
-              </a>
-            </motion.div>
+              See the next trip
+              <ArrowRight size={17} strokeWidth={2} style={{ marginLeft: 8 }} />
+            </a>
+            <a
+              href={WHATSAPP}
+              target="_blank"
+              rel="noreferrer"
+              className="btn-whatsapp"
+            >
+              <MessageCircle size={20} strokeWidth={1.6} className="icon" />
+              Talk on WhatsApp
+            </a>
+          </motion.div>
+        </div>
 
-            <motion.div
-              variants={{
-                hidden: { opacity: 0 },
-                show: { opacity: 1, transition: { duration: 1 } },
-              }}
-              className="mt-12 md:mt-16 flex flex-wrap items-center gap-x-6 gap-y-3 label-mono"
-            >
-              <span className="flex items-center gap-2">
-                <span className="h-px w-6 bg-ember" />
-                10,000+ travelers
-              </span>
-              <span>·</span>
-              <span>4.9 ★★★★★</span>
-              <span className="hidden sm:inline">·</span>
-              <span className="hidden sm:inline">100+ Google reviews</span>
-            </motion.div>
-          </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="hero-trust-bar flex flex-wrap items-center gap-x-8 gap-y-2"
+        >
+          <span className="flex items-center gap-2">
+            <span className="h-px w-6 bg-ember" />
+            10,000+ travelers
+          </span>
+          <span>·</span>
+          <span>4.9 ★★★★★</span>
+          <span className="hidden sm:inline">·</span>
+          <span className="hidden sm:inline">100+ Google reviews</span>
         </motion.div>
       </div>
 
@@ -165,9 +191,10 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.3, duration: 1 }}
-        className="absolute bottom-6 inset-x-0 flex justify-center label-mono pointer-events-none"
+        className="absolute flex justify-center label-mono pointer-events-none"
+        style={{ bottom: 24, left: "50%", transform: "translateX(-50%)" }}
       >
-        <span className="flex flex-col items-center gap-2 text-foreground/50">
+        <span className="flex flex-col items-center gap-2" style={{ color: "rgba(255,255,255,0.5)" }}>
           <span>Scroll</span>
           <motion.span
             animate={{ y: [0, 6, 0] }}

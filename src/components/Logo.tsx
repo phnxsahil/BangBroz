@@ -5,7 +5,7 @@ type Props = {
 };
 
 /**
- * Bag n Broz lockup — hand-drawn three-peak mark (matching the uploaded logo)
+ * Bag n Bros lockup — hand-drawn three-peak mark (matching the uploaded logo)
  * paired with a Sora wordmark. No raster background, scales cleanly.
  */
 export function Logo({ className = "", variant = "ink", showTagline = true }: Props) {
@@ -15,7 +15,7 @@ export function Logo({ className = "", variant = "ink", showTagline = true }: Pr
   return (
     <span
       className={`inline-flex items-center gap-2.5 leading-none select-none ${className}`}
-      aria-label="Bag n Broz"
+      aria-label="Bag n Bros"
     >
       <svg viewBox="0 0 64 40" width="38" height="24" className="shrink-0" aria-hidden>
         {/* back peak */}
@@ -56,7 +56,7 @@ export function Logo({ className = "", variant = "ink", showTagline = true }: Pr
           className="font-display tracking-tight text-[1.05rem] font-semibold"
           style={{ color: ink }}
         >
-          Bag <span className="italic font-normal">n</span> Broz
+          Bag <span className="italic font-normal">n</span> Bros
         </span>
         {showTagline && (
           <span

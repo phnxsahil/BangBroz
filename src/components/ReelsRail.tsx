@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
-import { Play, MessageCircle, ArrowRight, Instagram } from "lucide-react";
+import { Play, ArrowRight, Instagram, ChevronLeft, ChevronRight } from "lucide-react";
 import { IMG, WHATSAPP, INSTAGRAM, INSTAGRAM_HANDLE } from "@/lib/images";
 
 type Reel = { id: string; poster: string; title: string; place: string };
@@ -16,11 +16,29 @@ const reels: Reel[] = [
 export function ReelsRail() {
   const headerRef = useRef<HTMLDivElement | null>(null);
   const headerInView = useInView(headerRef, { once: true, amount: 0.2 });
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 10);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+  };
+
+  const scroll = (dir: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = el.clientWidth * 0.6;
+    el.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+  };
 
   return (
     <section
       id="reels"
-      className="relative bg-[#1A1410] text-[#F4ECE0] py-24 md:py-36 overflow-hidden"
+      className="reels-section relative bg-[#1A1410] text-[#F4ECE0] overflow-hidden"
+      style={{ paddingBottom: 48 }}
     >
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <motion.div
@@ -28,52 +46,75 @@ export function ReelsRail() {
           initial={{ opacity: 0, y: 24 }}
           animate={headerInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-12 gap-6 mb-12 md:mb-16"
+          className="grid grid-cols-12 gap-6"
+          style={{ marginBottom: 32 }}
         >
           <div className="col-span-12 md:col-span-8">
-            <div className="label-mono mb-4" style={{ color: "rgba(244,236,224,0.55)" }}>
+            <div className="label-mono mb-3" style={{ color: "rgba(244,236,224,0.55)" }}>
               05 — Captured in motion
             </div>
             <h2 className="font-display text-display-lg">
               Thirty seconds <span className="italic font-normal text-ember">from the road.</span>
             </h2>
           </div>
-          <div className="col-span-12 md:col-span-4 md:pt-10">
-            <p className="text-body-lg text-[#F4ECE0]/70">
-              Quiet clips from the last few expeditions. Follow along on Instagram —
-              we post a new one every week.
+          <div className="col-span-12 md:col-span-4 md:pt-8">
+            <p className="text-body text-[#F4ECE0]/70 leading-relaxed">
+              Quiet clips from the last few expeditions. Follow along on Instagram.
             </p>
           </div>
         </motion.div>
       </div>
 
-      <div className="overflow-x-auto no-scrollbar snap-x-mandatory">
-        <div className="flex gap-4 md:gap-5 px-5 md:px-10 pb-4">
-          {reels.map((r, i) => (
-            <ReelTile key={r.id} reel={r} index={i} />
-          ))}
-          <EndCard />
+      <div className="relative group/scroll">
+        {canScrollLeft && (
+          <button
+            onClick={() => scroll("left")}
+            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/15 flex items-center justify-center opacity-0 group-hover/scroll:opacity-100 transition-opacity cursor-pointer"
+          >
+            <ChevronLeft size={18} strokeWidth={1.8} className="text-white" />
+          </button>
+        )}
+        {canScrollRight && (
+          <button
+            onClick={() => scroll("right")}
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-black/50 backdrop-blur-sm border border-white/15 flex items-center justify-center opacity-0 group-hover/scroll:opacity-100 transition-opacity cursor-pointer"
+          >
+            <ChevronRight size={18} strokeWidth={1.8} className="text-white" />
+          </button>
+        )}
+
+        <div
+          ref={scrollRef}
+          onScroll={checkScroll}
+          className="overflow-x-auto no-scrollbar snap-x-mandatory"
+        >
+          <div className="reels-rail flex gap-4 pb-3">
+            {reels.map((r, i) => (
+              <ReelTile key={r.id} reel={r} index={i} />
+            ))}
+            <EndCard />
+          </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1400px] px-5 md:px-10 mt-12 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+      <div className="mx-auto max-w-[1400px] px-5 md:px-10 mt-8 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
         <a
           href={INSTAGRAM}
           target="_blank"
           rel="noreferrer"
-          className="btn-ember"
+          className="btn-ember text-sm py-2.5 px-5 min-h-0"
         >
-          <Instagram size={16} strokeWidth={1.8} />
+          <Instagram size={15} strokeWidth={1.8} />
           Follow {INSTAGRAM_HANDLE}
         </a>
         <a
           href={WHATSAPP}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 text-sm font-medium border-b border-[#F4ECE0]/40 pb-1 hover:text-ember hover:border-ember transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-2 text-xs font-medium border-b border-[#F4ECE0]/40 pb-1 hover:text-ember hover:border-ember transition-colors self-start sm:self-auto"
         >
           DM us your dates
-          <ArrowRight size={15} strokeWidth={2} />
+          <ArrowRight size={13} strokeWidth={2} />
         </a>
       </div>
     </section>
@@ -82,39 +123,37 @@ export function ReelsRail() {
 
 function ReelTile({ reel, index }: { reel: Reel; index: number }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  const inView = useInView(ref, { once: true, amount: 0.15 });
+  const inView = useInView(ref, { once: true, amount: 0.1 });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30, scale: 0.96 }}
+      initial={{ opacity: 0, y: 20, scale: 0.96 }}
       animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-      transition={{ duration: 0.8, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="snap-start shrink-0 w-[72vw] sm:w-[44vw] md:w-[26vw] lg:w-[20vw] aspect-[9/16] relative group cursor-pointer"
+      transition={{ duration: 0.6, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      className="snap-start shrink-0 reel-card group cursor-pointer"
     >
-      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-[#0E0A08]">
+      <div className="relative h-full w-full bg-[#0E0A08]">
         <img
           src={reel.poster}
           alt={reel.title}
           loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-110"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
 
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-14 w-14 rounded-full bg-white/12 backdrop-blur-md border border-white/30 flex items-center justify-center group-hover:bg-ember group-hover:border-ember transition-all duration-500">
-            <Play size={18} strokeWidth={1.8} className="text-white ml-0.5" fill="currentColor" />
-          </div>
+        <div className="play-btn group-hover:bg-ember group-hover:border-ember transition-all duration-500">
+          <Play size={15} strokeWidth={1.8} className="text-white ml-0.5" fill="currentColor" />
         </div>
 
-        <div className="absolute bottom-0 inset-x-0 p-4 text-white">
-          <div className="font-mono uppercase text-[10px] tracking-[0.22em] text-white/80 mb-1.5">
+        <div className="absolute bottom-0 inset-x-0 p-3.5 text-white">
+          <div className="font-mono uppercase text-[9px] tracking-[0.22em] text-white/70 mb-1">
             {reel.place}
           </div>
-          <div className="font-display text-xl leading-tight">{reel.title}</div>
+          <div className="font-display text-base leading-tight">{reel.title}</div>
         </div>
 
-        <div className="absolute top-4 left-4 font-mono uppercase text-[10px] tracking-[0.22em] text-white/80">
+        <div className="absolute top-3 left-3 font-mono uppercase text-[9px] tracking-[0.22em] text-white/70">
           {String(index + 1).padStart(2, "0")} / {String(reels.length).padStart(2, "0")}
         </div>
       </div>
@@ -128,19 +167,29 @@ function EndCard() {
       href={INSTAGRAM}
       target="_blank"
       rel="noreferrer"
-      className="snap-start shrink-0 w-[72vw] sm:w-[44vw] md:w-[26vw] lg:w-[20vw] aspect-[9/16] relative group"
+      className="snap-start shrink-0 reel-instagram-card group"
+      style={{
+        background: "#1A0E08",
+        border: "1px solid rgba(255,255,255,0.1)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 12,
+        textDecoration: "none",
+      }}
     >
-      <div className="h-full w-full rounded-2xl border border-ember/40 bg-gradient-to-br from-[#2a1d15] to-[#1A1410] flex flex-col items-center justify-center text-center p-6 transition-all duration-500 group-hover:border-ember group-hover:from-ember/15">
-        <div className="h-14 w-14 rounded-full bg-ember/15 border border-ember/40 flex items-center justify-center mb-6 group-hover:bg-ember transition-all duration-500">
-          <Instagram size={20} strokeWidth={1.8} className="text-ember group-hover:text-white transition-colors" />
-        </div>
-        <div className="label-mono text-ember mb-3">Next move</div>
-        <div className="font-display text-2xl leading-tight mb-4 text-[#F4ECE0]">
-          Follow us<br />on Instagram
-        </div>
-        <div className="label-mono flex items-center gap-2" style={{ color: "rgba(244,236,224,0.7)" }}>
-          {INSTAGRAM_HANDLE} <ArrowRight size={12} strokeWidth={2} />
-        </div>
+      <div className="h-11 w-11 rounded-full bg-ember/15 border border-ember/40 flex items-center justify-center group-hover:bg-ember transition-all duration-500">
+        <Instagram size={18} strokeWidth={1.8} className="text-ember group-hover:text-white transition-colors" />
+      </div>
+      <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)" }}>
+        Next move
+      </div>
+      <div style={{ fontSize: 18, fontWeight: 600, color: "#fff", textAlign: "center", padding: "0 20px", lineHeight: 1.3 }}>
+        Follow us<br />on Instagram
+      </div>
+      <div style={{ fontSize: 13, color: "#C8682A" }}>
+        {INSTAGRAM_HANDLE} <ArrowRight size={11} strokeWidth={2} style={{ display: "inline", verticalAlign: "middle" }} />
       </div>
     </a>
   );

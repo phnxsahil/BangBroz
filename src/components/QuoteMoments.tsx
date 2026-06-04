@@ -1,5 +1,6 @@
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { IMG } from "@/lib/images";
 
 type Moment = { quote: string; author: string; place: string; image: string };
@@ -13,21 +14,44 @@ const moments: Moment[] = [
 export function QuoteMoments() {
   const ref = useRef<HTMLDivElement | null>(null);
   const inView = useInView(ref, { once: true, amount: 0.15 });
+  const [current, setCurrent] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % moments.length);
+    }, 4200);
+  }, []);
+
+  useEffect(() => {
+    startTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [startTimer]);
+
+  const goTo = (i: number) => {
+    setCurrent(i);
+    startTimer();
+  };
+
+  const prev = () => goTo((current - 1 + moments.length) % moments.length);
+  const next = () => goTo((current + 1) % moments.length);
+
+  const m = moments[current];
 
   return (
-    <section className="relative bg-surface py-24 md:py-36 px-5 md:px-10">
-      <div className="mx-auto max-w-[1400px]">
+    <section className="relative bg-surface py-20 md:py-32 px-5 md:px-10 overflow-hidden">
+      <div className="mx-auto max-w-[1400px]" ref={ref}>
         <motion.div
-          ref={ref}
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-12 gap-6 mb-12 md:mb-16"
+          className="grid grid-cols-12 gap-6 mb-10 md:mb-14"
         >
           <div className="col-span-12 md:col-span-8">
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-4 mb-5">
               <span className="h-px w-10 bg-ember" />
-              <span className="label-mono text-ember">06 — Travelers</span>
+              <span className="label-mono section-label text-ember">06 — Travelers</span>
             </div>
             <h2 className="font-display text-display-lg">
               What they said <span className="italic font-normal text-ember">after.</span>
@@ -35,38 +59,73 @@ export function QuoteMoments() {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-12 gap-6 md:gap-8">
-          {moments.map((m, i) => (
-            <motion.article
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.8, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="col-span-12 md:col-span-4 bg-background rounded-2xl overflow-hidden border border-foreground/8 flex flex-col group hover:shadow-[0_24px_60px_-30px_rgba(59,42,32,0.35)] transition-shadow duration-500"
+        <div className="relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, x: 60 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -60 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="grid grid-cols-12 gap-6 md:gap-10 items-stretch"
             >
-              <div className="aspect-[5/4] overflow-hidden">
+              <div className="col-span-12 md:col-span-7 aspect-[16/10] md:aspect-auto rounded-2xl overflow-hidden relative">
                 <img
                   src={m.image}
                   alt={m.place}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
-              </div>
-              <div className="p-7 md:p-8 flex-1 flex flex-col">
-                <p className="font-display italic text-2xl md:text-[1.55rem] leading-snug text-foreground">
-                  &ldquo;{m.quote}&rdquo;
-                </p>
-                <div className="mt-6 pt-6 border-t border-foreground/10 flex items-center justify-between label-mono">
-                  <span>{m.author}</span>
-                  <span className="text-ember">{m.place}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute bottom-5 left-5 label-mono text-white/80">
+                  {m.place}
                 </div>
               </div>
-            </motion.article>
-          ))}
+
+              <div className="col-span-12 md:col-span-5 flex flex-col justify-center bg-background rounded-2xl p-7 md:p-10 border border-foreground/8">
+                <Quote size={28} strokeWidth={1.2} className="text-ember/60 mb-5" />
+                <p className="font-display italic text-2xl md:text-[1.7rem] leading-snug text-foreground mb-6">
+                  &ldquo;{m.quote}&rdquo;
+                </p>
+                <div className="pt-5 border-t border-foreground/10 flex items-center justify-between label-mono">
+                  <span>{m.author}</span>
+                  <span className="text-ember">{String(current + 1).padStart(2, "0")} / {String(moments.length).padStart(2, "0")}</span>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="flex items-center justify-between mt-6 md:mt-8">
+            <div className="flex items-center gap-3">
+              {moments.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className={`h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                    i === current ? "w-8 bg-ember" : "w-1.5 bg-foreground/20 hover:bg-foreground/35"
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={prev}
+                className="h-9 w-9 rounded-full border border-foreground/20 flex items-center justify-center hover:bg-foreground/10 transition-colors cursor-pointer"
+                aria-label="Previous"
+              >
+                <ChevronLeft size={16} strokeWidth={1.6} />
+              </button>
+              <button
+                onClick={next}
+                className="h-9 w-9 rounded-full border border-foreground/20 flex items-center justify-center hover:bg-foreground/10 transition-colors cursor-pointer"
+                aria-label="Next"
+              >
+                <ChevronRight size={16} strokeWidth={1.6} />
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-2 label-mono">
+        <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 label-mono">
           <span>★ 4.9 / 5</span>
           <span>·</span>
           <span>100+ Google reviews</span>
